@@ -74,5 +74,4 @@ if st.button("🌡️ Increase Cooling"):
 if st.button("🔁 Trigger Workload Balancing"):
     st.success(f"Workload balancing initiated for {selected_rack} ✅")
 
-# --- FOOTER ---
-st.caption("Built with Streamlit | AI Edge Software Simulation for VC Demo")
+
