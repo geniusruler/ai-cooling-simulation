@@ -11,15 +11,11 @@ st.set_page_config(layout="wide", page_title="AI Data Center Dashboard")
 st.title("🌐 AI-Powered Edge Data Center")
 st.caption("Real-time monitoring, intelligent control, and operator interaction")
 
-# --- USER LOGIN SIMULATION ---
+# --- SIMULATED LOGIN UI (Disabled for demo purposes) ---
 st.sidebar.header("🔐 Operator Panel")
 user = st.sidebar.text_input("Username", "admin")
 password = st.sidebar.text_input("Password", type="password")
-if user != "admin" or password != "admin123":
-    st.sidebar.warning("Please login with valid credentials.")
-    st.stop()
-else:
-    st.sidebar.success("Access granted ✅")
+st.sidebar.info("Login disabled for demo. Access granted ✅")
 
 # --- SIMULATED SERVER RACK DATA ---
 def generate_data():
@@ -73,5 +69,3 @@ if st.button("🌡️ Increase Cooling"):
 
 if st.button("🔁 Trigger Workload Balancing"):
     st.success(f"Workload balancing initiated for {selected_rack} ✅")
-
-
