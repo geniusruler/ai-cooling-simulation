@@ -69,3 +69,31 @@ if st.button("🌡️ Increase Cooling"):
 
 if st.button("🔁 Trigger Workload Balancing"):
     st.success(f"Workload balancing initiated for {selected_rack} ✅")
+
+
+# --- ENERGY SAVINGS ESTIMATION ---
+st.subheader("💰 Energy Savings Estimation (AI vs Traditional)")
+
+baseline_power_per_rack = 1000  # Assumed constant power draw per rack in traditional control
+num_racks = len(df)
+ai_power_total = df["Power Draw (W)"].sum()
+
+# Calculations
+traditional_total_power = baseline_power_per_rack * num_racks
+ai_daily_kwh = ai_power_total * 24 / 1000
+traditional_daily_kwh = traditional_total_power * 24 / 1000
+energy_saved_kwh = traditional_daily_kwh - ai_daily_kwh
+
+# Costs
+price_per_kwh = 0.12
+daily_savings = energy_saved_kwh * price_per_kwh
+yearly_savings = daily_savings * 365
+
+# Display results
+col_a, col_b, col_c = st.columns(3)
+col_a.metric("Daily Energy Saved (kWh)", f"{energy_saved_kwh:.2f}")
+col_b.metric("Daily Cost Savings", f"${daily_savings:.2f}")
+col_c.metric("Yearly Projection", f"${yearly_savings:,.2f}")
+
+st.caption("Estimates assume each traditional rack draws 1000W continuously and AI dynamically optimizes workloads and cooling.")
+
