@@ -73,16 +73,26 @@ if st.button("🔁 Trigger Workload Balancing"):
 
 # --- ENERGY SAVINGS ESTIMATION ---
 st.subheader("💰 Energy Savings Estimation (AI vs Traditional)")
-baseline_power_kwh = df["Power Draw (W)"].sum() * 24 / 1000  # Baseline: current power usage in kWh/day
-optimized_power_kwh = baseline_power_kwh * 0.85  # AI reduces 15%
+# Define assumptions
+cost_per_kwh = 0.12  # in USD
+hours_per_year = 24 * 365
+ai_total_power = df["Power Draw (W)"].sum()
 
-baseline_cost = baseline_power_kwh * 0.12  # Assuming $0.12 per kWh
-optimized_cost = optimized_power_kwh * 0.12
-savings_dollars = baseline_cost - optimized_cost
+# Assume traditional systems use 10% more power during high load or overheating
+extra_traditional_power = 0
+for _, row in df.iterrows():
+    if row["Temperature (°C)"] > 35 or row["Workload (%)"] > 90:
+        extra_traditional_power += row["Power Draw (W)"] * 0.10
 
-col_a, col_b, col_c = st.columns(3)
-col_a.metric("Traditional Cost", f"${baseline_cost:.2f}")
-col_b.metric("Optimized Cost", f"${optimized_cost:.2f}")
-col_c.metric("Daily Savings", f"${savings_dollars:.2f}")
+traditional_total_power = ai_total_power + extra_traditional_power
 
-st.info(f"✅ Estimated energy savings: **{(savings_dollars / baseline_cost * 100):.1f}%** daily with AI-based optimization.")
+# Savings
+savings_per_hour = traditional_total_power - ai_total_power
+savings_per_year_kwh = (savings_per_hour * hours_per_year) / 1000  # convert W to kWh
+money_saved_per_year = savings_per_year_kwh * cost_per_kwh
+money_saved_1000_sites = money_saved_per_year * 1000
+
+# Display
+st.metric("💸 Money Saved / Year", f"${money_saved_per_year:,.2f}")
+st.metric("⚡ Energy Saved / Year", f"{savings_per_year_kwh:,.0f} kWh")
+st.metric("🌍 Scaled to 1000 Sites", f"${money_saved_1000_sites:,.2f} / year")
